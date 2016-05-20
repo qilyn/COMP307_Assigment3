@@ -47,14 +47,25 @@ public class NaiveBayes {
 	 */
 	private void createNaiveBayes() {
 		Node root = new NodeInst( 0 );
-		for (int var = 0; var < trainingData.get(0).size(); var++) {
-			root.addChild(var+1); // root is 0
+		int size = trainingData.get(0).size();
+		for (int var = 0; var < size; var++) { // minus one, the last is our actual class
+			if (var != size - 1)
+				root.addChild(var+1); // root is 0
 			for (ArrayList<Integer> a : trainingData) {
-				Node variable = root.getChildByName(var+1);
-				if (a.get(var) == 1) {
-					variable.addTrueInstances(1);
+				if (var != size - 1) {
+					Node variable = root.getChildByName(var+1);
+					if (a.get(var) == 1) {
+						variable.addTrueInstances(1);
+					} else {
+						variable.addFalseInstances(1);
+					}
 				} else {
-					variable.addFalseInstances(1);
+					if (a.get(var) == 1) {
+						root.addTrueInstances(1);
+					} else {
+						root.addFalseInstances(1);
+					}
+					continue;
 				}
 			}
 		}
